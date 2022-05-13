@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .movemenu{
+      /* ?왜 클래스 리스트에 추가는 됐는데 안되는 거죠? */
+      /* top: 0;
+      left: 20vw;
+      transition: 1s; */
+      /* !background-color로 적용해보니까 컬러 적용은 잘 된다
+      왜 이동은 안된 걸까? */
+      width: 500px; height: 100vh; background: #414141; position: absolute; top: 0; left: 0;
+      transition:cubic-bezier(1, 0, 0, 1);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <nav id="menu" class="movemenu">
+    <button></button>
+  </nav>
+  <script>
+    // 1. 우선 접혀질 메뉴를 만든다
+    // *
+    document.body.setAttribute('style',`margin: 0; padding: 0;`);
+    
+    // select root
+    const root = document.querySelector('#root');
+    console.log(root);
+    // style root
+    root.setAttribute('style',`width: 100vw; height: 100vh; background: #c4c4c4;`)
+
+    // select menu
+    const menuCon = document.getElementById('menu');
+    console.log(menuCon);
+    // menu style
+    menuCon.setAttribute('style',`width: 200px; height: 100vh; background: #fff; position: absolute; top: 0; left: 0;`);
+    console.log(menuCon.children);
+
+    // menuCon.children
+    const menuChild = menuCon.children[0];
+    console.log(menuChild);
+    // menuChild style
+    menuChild.setAttribute('style',`width: 50px; height: 50px; border-radius: 50px;`);
+
+    
+    /* 2. 버튼을 클릭하면 메뉴가 펼쳐진다(펼쳐진다, !그런데 이동하는 식으로 펼쳐지면 버튼의 위치가 똑같은 곳에서 변경되기가 어렵다, 크기를 변경해주고 자식요소를 나타나게 해주는 방식으로 설계해보자)
+    버튼 아이콘이 사라지고 X자 모양이 생겨나도록 해준다 */
+    menuChild.addEventListener('click', ()=>{
+      console.log('click');
+      console.log(event.target);
+      // removeChild할 부분
+      let btnRemove = document.removeChild('button');
+      menuCon.removeChild(btnRemove);
+      menuCon.style.transition = '2s';
+      //  classList에 추가 제거할 부분
+      if(menuCon.classList.contains('movemenu') === true){
+        console.log('움직임 들어있음')
+        console.log(menuCon.classList);
+        menuCon.classList.remove('movemenu');
+      } else{
+        console.log('움직임 안들어있음')
+        menuCon.classList.add('movemenu');
+        console.log(menuCon.classList);
+        console.dir(menuCon);
+      }
+      // let clickValue = true;
+      // if(clickValue === true){
+      //   if(menuCon.style.width >= 200){
+      //     console.log('200보다 크다');
+      //     menuCon.style.transtion = '2s';
+      //     menuCon.style.width = '200px';
+      //   }    
+      //   clickValue = false;
+      //   } else{
+      //     if(menuCon.style.width < 200){
+      //       menuCon.style.width = '500px';
+      //       menuCon.style.transtion = '2s';
+      //     }
+      //     clickValue = false;
+      //   }
+
+    });
+    
+    // 3. 그리고 메뉴도 만들어준다
+
+    // 4. 접히고 펴지는 동작을 만들어 준다 
+  </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .move{
+      /* ?왜 클래스 리스트에 추가는 됐는데 안되는 거죠? */
+      /* top: 0;
+      left: 20vw;
+      transition: 1s; */
+      /* !background-color로 적용해보니까 컬러 적용은 잘 된다
+      왜 이동은 안된 걸까? */
+      width: 500px; height: 100vh; background: #414141; position: absolute; top: 0; left: 0;
+      transition:cubic-bezier(1, 0, 0, 1);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <nav id="menu">
+    <button></button>
+    <div></div>
+  </nav>
+  <script>
+    // 1. 우선 접혀진 메뉴를 만든다
+    // *
+    document.body.setAttribute('style',`margin: 0; padding: 0;`);
+    
+    // select root
+    const root = document.querySelector('#root');
+    // console.log(root);
+    // style root
+    root.setAttribute('style',`width: 100vw; height: 100vh; background: #c4c4c4;`)
+
+    // select menu
+    const menuCon = document.getElementById('menu');
+    // console.log(menuCon);
+    // menu style
+    menuCon.setAttribute('style',`width: 100px; height: 100vh; background: #fff; position: absolute; top: 0; left: 0; display: flex; align-items: center; justify-content: space-around;`);
+    // console.log(menuCon.children);
+
+    // menuCon.children
+    const menuChild = menuCon.children[0];
+    const menuAppearCon = menuCon.children[1];
+    // console.log(menuChild);
+    // console.log(menuAppearCon);
+    // menuChild style
+    menuChild.setAttribute('style',`width: 50px; height: 50px; border-radius: 50px;`);
+    // menuAppearCon style
+    menuAppearCon.setAttribute('style',`width: 50vw; height: 50vh; background: #fff; display: flex; flex-direction: column; overflow: hidden; display: none;`);
+
+    
+    /* 2. 버튼을 클릭하면 메뉴가 펼쳐진다(펼쳐진다, !그런데 이동하는 식으로 펼쳐지면 버튼의 위치가 똑같은 곳에서 변경되기가 어렵다, 크기를 변경해주고 자식요소를 나타나게 해주는 방식으로 설계해보자)
+    버튼 아이콘이 사라지고 X자 모양이 생겨나도록 해준다 */
+    
+    // !true를 바깥으로 빼줘야 true, false가 나오겠지
+    // 메뉴를 펼치는 부분은 했다
+    // 2. 접히고 펴지는 크기조절을 만들어 준다 
+    let clickValue = true;
+    menuChild.addEventListener('click', ()=>{
+      // clickValue === true  //펼쳐진 메뉴 상태
+      if(clickValue === true){
+        // console.log(clickValue);
+        menuCon.style.background = '#414141';
+        menuCon.style.width = '500px';
+        menuAppearCon.style.display = 'block';
+
+        // 메뉴로 자식요소를 나타나게 해줘야 한다
+        if(clickValue === true){
+          // console.log('menuAppear');
+          // 3. 그리고 메뉴도 만들어준다
+          for(let i = 0; i < 5; i++){
+            let menuAppear = document.createElement('div');
+            menuAppear.textContent = 'menu';
+            menuAppear.setAttribute('style',`width: 100%; height: 10vh; border: 1px solid black; text-align: center;`);
+            menuAppearCon.append(menuAppear);
+            // ?문제는 이렇게 메뉴를 덧붙여주면 클릭할 때마다 계속 생긴다, 멈춰줘야 한다
+            // ?overflow: hidden;으로 임시방편은 줬는데 어떻게 없애주지?
+            // if(menuAppearCon.children.length > 5){
+            //   menuAppearCon.remove(menuAppear);
+            // }
+          }
+        }
+        clickValue = false;
+        // clickValue !== true === clickValue === false //접혀진 메뉴 상태
+      } else{
+        // console.log(clickValue);
+          menuCon.style.background = '#e3e3e3';
+          menuCon.style.width = '100px';
+          menuAppearCon.style.display = 'none';
+          clickValue = true;
+
+        }
+        // ---------------------------------------------------------------------------------
+        // 4.X자로 바뀌는 아이콘은 어떻게 만들까, 원래의 요소를 지우고, 새로 두 요소를 넣어서 X자로 만들어준다
+        // 펼쳐진 상태 == true
+      if(clickValue === false){
+        console.log('메뉴 사라졌드아');
+        console.log(clickValue);
+        menuCon.removeChild(menuChild);
+        // 이렇게 하면 없어지긴 한다 
+        for(let i = 0; i < 2; i++){
+          let xBtn = document.createElement('button');
+          xBtn.setAttribute('style',`width: 50px; height: 2px; background: aqua; position: absolute; left: 10px;`);  
+          // menuConAppear보다 앞에 넣어줘야 하는데
+          // menuCon.append(xBtn);
+          menuAppearCon.style.flexDirection = 'column';
+          // !앞에 넣을 수 있다
+          menuAppearCon.before(xBtn);
+          // 일자 두개의 메뉴 버튼을 만들었다, 어떻게 만들지?
+          // X를 만들어야 하는데
+          // x를 여기서 만들고
+        }
+        // !이곳에서 X로 변형을 만들어줘야 한다 => 왜냐면 위에서 자식으로 추가되는 반복문을 빠져나오고 나서야 children이 button,button,div 
+        console.log(menuCon.children);
+        let xBtnItem = menuCon.children;
+        xBtnItem[0].style.transform = 'rotate(45deg)';
+        xBtnItem[1].style.transform = 'rotate(-45deg)';
+        // ?문제가 하나 있다 어떻게 다시 x에 적용을 하지?
+        // !클릭이벤트를 달아주면 될 것
+        menuCon.addEventListener('click',event => {
+          console.log(event.target);
+          menuCon.removeChild('button');  
+          //다만 X를 만들어주고 다시 생겨날 부분이 있어야 한다
+          let originBtn = document.createElement('button');
+          originBtn.setAttribute('style',`width: 50px; height: 50px; border-radius: 50px;`);  
+          menuCon.appendChild(originBtn);
+        });
+        clickValue = true;
+      } else{
+        // 이 부분은 else가 아니라 생겨난 것에 대해 클릭 이벤트를 달면 클릭 실행하면 원래의 버튼이 다시 생기도록 해서 만들어줘야하는데
+        console.log('메뉴 다시 나타나야 한다');
+        console.log(menuCon.children);
+        menuCon.removeChild('button');  
+        //다만 X를 만들어주고 다시 생겨날 부분이 있어야 한다
+        let originBtn = document.createElement('button');
+        originBtn.setAttribute('style',`width: 50px; height: 50px; border-radius: 50px;`);  
+        menuCon.appendChild(originBtn);
+        clickValue = true;
+      }
+    });
+
+  </script>
+</body>
+</html>
